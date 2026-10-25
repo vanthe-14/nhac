@@ -232,7 +232,7 @@ $("next").onclick=next;
 $("toggle").onclick=toggle;
 $("playAll").onclick=()=>playSong(0);
 $("nowHeart").onclick=()=>favorite();
-$("favOnly").onclick=()=>{view=view==="all"?"favorites":"all";render()};
+// Đã bỏ sự kiện favOnly vì nút này không tồn tại; mục Yêu thích dùng các nút .nav bên dưới.
 document.querySelectorAll(".nav").forEach(btn=>btn.onclick=()=>{
  view=btn.dataset.view;
  document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b===btn));
