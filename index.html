@@ -56,7 +56,7 @@ main{padding:30px clamp(18px,3vw,42px) 125px;min-width:0;background:linear-gradi
 .timeline input{flex:1;min-width:0;accent-color:var(--green);cursor:pointer}
 .volume{display:flex;justify-content:flex-end;align-items:center;gap:9px;color:var(--muted)}
 .volume input{width:100px;accent-color:var(--green)}
-audio{display:none}body{padding-bottom:100px}
+audio{display:none}body{padding-bottom:20px}.player{display:none}.yt-player{margin:0 0 30px;padding:16px;background:#181818;border:1px solid #303030;border-radius:12px}.yt-player[hidden]{display:none}.yt-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.yt-heading span{font-size:12px;color:#b3b3b3}.yt-frame{position:relative;width:100%;max-width:900px;aspect-ratio:16/9;margin:auto;background:#000;border-radius:8px;overflow:hidden}.yt-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 @media(hover:none){.round-play{opacity:1;transform:none}}
 @media(max-width:760px){
  header{height:auto;padding:15px 4%;flex-wrap:wrap;gap:14px}.logo{font-size:23px}.search{width:100%;order:2}
@@ -126,6 +126,11 @@ input[type=range]{cursor:pointer}
     <button class="primary" id="playAll">▶ &nbsp; Phát nhạc</button>
   </section>
 
+  <section class="yt-player" id="ytSection" hidden>
+    <div class="yt-heading"><strong id="ytTitle">Chọn bài hát để phát</strong><span>Đang phát từ YouTube</span></div>
+    <div class="yt-frame"><iframe id="ytFrame" title="Trình phát YouTube" src="" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+  </section>
+
   <div class="section-title">
     <h2 id="heading">Bài hát nổi bật</h2>
   </div>
@@ -167,12 +172,29 @@ input[type=range]{cursor:pointer}
 
 <script>
 const tracks=[
- {title:"Dreams",artist:"Nhạc mẫu 01",cover:"https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
- {title:"Chill Night",artist:"Nhạc mẫu 02",cover:"https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
- {title:"Ocean Vibes",artist:"Nhạc mẫu 03",cover:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
- {title:"Good Mood",artist:"Nhạc mẫu 04",cover:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
- {title:"Night Drive",artist:"Nhạc mẫu 05",cover:"https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
- {title:"Relax Time",artist:"Nhạc mẫu 06",cover:"https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"}
+ {title:"Mashup 50in1 Nhạc Siêu Peak",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 30in1 Nhạc Lộn Xộn",artist:"Mashup YouTube",start:774,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=774s"},
+ {title:"Mashup 20in1 Nhạc Thập Cẩm",artist:"Mashup YouTube",start:1276,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1276s"},
+ {title:"Mashup 5in1 Nhạc Lộn Xộn",artist:"Mashup YouTube",start:1614,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1614s"},
+ {title:"Mashup 3in1 Trả Cho Anh x Chấp Niệm Trong Em x Anh Vội Quên",artist:"Mashup YouTube",start:1883,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1883s"},
+ {title:"Mashup 4in1 Lo Người Ướt Áo x Đừng Nói x Yêu Bằng Mắt",artist:"Mashup YouTube",start:2190,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2190s"},
+ {title:"Mashup 3in1 Thương Nhau Đến Thế x Chấp Niệm Trong Em x Anh Vội Quên",artist:"Mashup YouTube",start:2455,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2455s"},
+ {title:"Mashup 10in1 Nhạc Thập Cẩm",artist:"Mashup YouTube",start:2707,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2707s"},
+ {title:"Mashup 10in1 Nhạc Full Topping",artist:"Mashup YouTube",start:2954,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2954s"},
+ {title:"Ngày Mình Chia Tay",artist:"Mashup YouTube",start:3175,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3175s"},
+ {title:"Thành Đô",artist:"Mashup YouTube",start:3432,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3432s"},
+ {title:"Hẹn Hò Nhưng Không Yêu",artist:"Mashup YouTube",start:3687,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3687s"},
+ {title:"Mashup 2in1 Anh Vội Quên x Trả Cho Anh",artist:"Mashup YouTube",start:3917,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3917s"},
+ {title:"Mashup 2in1 Yêu Bằng Mắt x Lo Người Ướt Áo",artist:"Mashup YouTube",start:4165,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4165s"},
+ {title:"Mashup 2in1 Thương Thầm x Mưa Rơi Vào Phòng",artist:"Mashup YouTube",start:4432,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4432s"},
+ {title:"Mashup 2in1 Lo Người Ướt Áo x Đoạn Tuyệt Nàng Đi",artist:"Mashup YouTube",start:4668,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4668s"},
+ {title:"Mashup 2in1 Đổi Tình Đổi Áo x Lý Do Là Gì",artist:"Mashup YouTube",start:4873,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4873s"},
+ {title:"Mashup Mở Lòng Vì Ai x Em Thua Cô Ta x Chắc Gì Anh Yêu Cô Ấy",artist:"Mashup YouTube",start:5208,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=5208s"},
+ {title:"Mashup 3in1 Mở Lòng Vì Ai x Ôm Sầu",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 2in1 Thương Phận Hồng Nhan x Không Ai Nói Chia Tay",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 5in1 Chúc Phúc Cho Em",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 2in1 Trả Cho Anh x Vở Kịch Của Em",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 2in1 Lo Người Ướt Áo x Mở Lòng Vì Ai",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"}
 ];
 
 const $=id=>document.getElementById(id);
@@ -225,16 +247,15 @@ function render(){
 function playSong(i){
  current=(i+tracks.length)%tracks.length;
  const s=tracks[current];
- audio.src=s.url;
+ $("ytSection").hidden=false;
+ $("ytTitle").textContent=s.title;
+ $("ytFrame").src="https://www.youtube.com/embed/0nzxMTQKb54?start="+s.start+"&autoplay=1&rel=0";
  $("cover").src=s.cover;
  $("nowTitle").textContent=s.title;
- $("nowArtist").textContent=s.artist;
+ $("nowArtist").textContent="Đang phát từ YouTube";
  $("nowHeart").textContent=favorites.includes(current)?"♥":"♡";
  $("nowHeart").classList.toggle("on",favorites.includes(current));
- audio.play().then(()=>{$("toggle").textContent="Ⅱ"}).catch(()=>{
-  $("toggle").textContent="▶";
-  $("nowArtist").textContent="Không phát được. Hãy thử lại.";
- });
+ $("ytSection").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function toggle(){
