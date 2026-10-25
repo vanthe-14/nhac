@@ -186,7 +186,7 @@ input[type=range]{cursor:pointer}
 <audio id="audio" preload="metadata"></audio>
 
 <script>
-const tracks=[{title:"Nhạc 1",artist:"MP3",src:"./nhac1.mp3"}];
+const tracks=[{title:"Nhạc 1",artist:"MP3",src:"./nhac1.mp3"},{title:"Trích Tiên",artist:"MP3",src:"./Trích%20tiên.mp3"},{title:"Hãy Trao Cho Anh",artist:"MP3",src:"./Hãy%20trao%20cho%20anh.mp3"}];
 
 const $=id=>document.getElementById(id);
 const audio=$("audio");
@@ -248,7 +248,7 @@ function playSong(i){
  $("nowArtist").textContent="Đang phát MP3";
  $("nowHeart").textContent=favorites.includes(current)?"♥":"♡";
  $("nowHeart").classList.toggle("on",favorites.includes(current));
- audio.play().then(()=>{$("toggle").textContent="Ⅱ"}).catch(()=>{$("toggle").textContent="▶"; alert("Không phát được file MP3. Hãy kiểm tra nhac1.mp3 đã được tải lên cùng thư mục với index.html chưa.");});
+ audio.play().then(()=>{$("toggle").textContent="Ⅱ"}).catch(()=>{$("toggle").textContent="▶"; alert("Không phát được file MP3. Hãy kiểm tra tên file và bảo đảm file nhạc nằm cùng thư mục với index.html.");});
 }
 
 function toggle(){
