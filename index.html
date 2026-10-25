@@ -186,7 +186,7 @@ input[type=range]{cursor:pointer}
 <audio id="audio" preload="metadata"></audio>
 
 <script>
-const tracks=[];
+const tracks=[{title:"Nhạc 1",artist:"MP3",src:"./nhac1.mp3"}];
 
 const $=id=>document.getElementById(id);
 const audio=$("audio");
@@ -208,6 +208,7 @@ function render(){
  $("heading").textContent=view==="all"?"Danh sách bài hát":"Bài hát yêu thích";
  $("songs").innerHTML="";
  $("empty").hidden=list.length>0;
+ $("empty").textContent=q?"Không tìm thấy bài hát nào.":"Chưa có bài hát. Hãy tải file MP3 lên GitHub.";
  list.forEach(s=>{
   const card=document.createElement("article");
   card.className="card song-row";
@@ -219,7 +220,7 @@ function render(){
   const title=document.createElement("h3");
   title.textContent=s.title;
   const artist=document.createElement("p");
-  artist.textContent="YouTube · Mashup";
+  artist.textContent=s.artist+" · MP3";
   titleBox.append(title,artist);
   const play=document.createElement("button");
   play.className="row-play";
@@ -237,19 +238,21 @@ function render(){
 }
 
 function playSong(i){
+ if(!tracks.length)return;
  current=(i+tracks.length)%tracks.length;
  const s=tracks[current];
- $("ytSection").hidden=false;
- $("ytTitle").textContent=s.title;
- $("ytFrame").src="https://www.youtube.com/embed/0nzxMTQKb54?start="+s.start+"&autoplay=1&rel=0";
+ $("ytSection").hidden=true;
+ $("ytFrame").src="";
+ audio.src=s.src;
  $("nowTitle").textContent=s.title;
- $("nowArtist").textContent="Đang phát từ YouTube";
+ $("nowArtist").textContent="Đang phát MP3";
  $("nowHeart").textContent=favorites.includes(current)?"♥":"♡";
  $("nowHeart").classList.toggle("on",favorites.includes(current));
- $("ytSection").scrollIntoView({behavior:"smooth",block:"start"});
+ audio.play().then(()=>{$("toggle").textContent="Ⅱ"}).catch(()=>{$("toggle").textContent="▶"; alert("Không phát được file MP3. Hãy kiểm tra nhac1.mp3 đã được tải lên cùng thư mục với index.html chưa.");});
 }
 
 function toggle(){
+ if(!tracks.length)return;
  if(current<0){playSong(0);return}
  if(audio.paused){
   audio.play().then(()=>{$("toggle").textContent="Ⅱ"}).catch(()=>{});
@@ -258,8 +261,9 @@ function toggle(){
  }
 }
 
-function next(){playSong(current<0?0:current+1)}
+function next(){if(tracks.length)playSong(current<0?0:current+1)}
 function prev(){
+ if(!tracks.length)return;
  if(current>=0&&audio.currentTime>3){audio.currentTime=0;return}
  playSong(current<=0?tracks.length-1:current-1);
 }
@@ -280,7 +284,7 @@ $("search").addEventListener("input",render);
 $("prev").onclick=prev;
 $("next").onclick=next;
 $("toggle").onclick=toggle;
-$("playAll").onclick=()=>playSong(0);
+$("playAll").onclick=()=>{if(tracks.length)playSong(0)};
 $("nowHeart").onclick=()=>favorite();
 // Đã bỏ sự kiện favOnly vì nút này không tồn tại; mục Yêu thích dùng các nút .nav bên dưới.
 document.querySelectorAll(".nav").forEach(btn=>btn.onclick=()=>{
