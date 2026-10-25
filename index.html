@@ -1,1 +1,258 @@
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MusicBox | Nghe nhạc</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101010;color:#fff;font-family:Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+header{height:72px;background:#181818;display:flex;align-items:center;justify-content:space-between;padding:0 5%;gap:20px}
+.logo{font-size:26px;font-weight:bold;color:#b69cff}
+.search{width: min(420px,60%);padding:13px 18px;border:1px solid #444;border-radius:25px;background:#292929;color:white;outline:none}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 72px)}
+aside{background:#151515;padding:25px 18px}
+.nav{display:block;width:100%;text-align:left;background:none;border:0;color:#aaa;padding:14px 12px;border-radius:8px;margin-bottom:5px}
+.nav:hover,.nav.active{background:#292929;color:#fff}
+main{padding:28px 4%;min-width:0}
+.hero{padding:30px;border-radius:18px;background:linear-gradient(120deg,#542e91,#191522);margin-bottom:28px}
+.hero h1{font-size:clamp(28px,4vw,42px);margin:0 0 12px}
+.hero p{color:#e0d5f8}
+.primary{background:#b69cff;color:#17121f;border:0;border-radius:25px;padding:12px 22px;font-weight:bold}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.section-title h2{font-size:22px}
+.songs{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:18px}
+.card{background:#1c1c1c;padding:13px;border-radius:12px;transition:.2s;min-width:0}
+.card:hover{background:#292929;transform:translateY(-3px)}
+.art{position:relative}
+.art img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:#292929}
+.round-play{position:absolute;right:8px;bottom:8px;width:42px;height:42px;border:0;border-radius:50%;background:#b69cff;font-size:18px;box-shadow:0 3px 12px #0007}
+.card h3{font-size:15px;margin:12px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card p{font-size:13px;color:#aaa;margin:0 0 10px}
+.card-bottom{display:flex;align-items:center;justify-content:space-between}
+.heart{border:0;background:none;color:#aaa;font-size:23px}
+.heart.on{color:#ff6b9c}
+.empty{color:#aaa;padding:25px 0}
+.player{position:fixed;bottom:0;left:0;width:100%;background:#202020;border-top:1px solid #383838;display:grid;grid-template-columns:1fr 1.2fr 1fr;align-items:center;gap:18px;padding:12px 3%;z-index:5}
+.track{display:flex;align-items:center;gap:12px;min-width:0}
+.track img{width:50px;height:50px;object-fit:cover;border-radius:7px}
+.track-text{min-width:0}
+.track-text strong,.track-text span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track-text span{font-size:12px;color:#aaa;margin-top:5px}
+.controls{text-align:center}
+.control-buttons{display:flex;align-items:center;justify-content:center;gap:18px}
+.control-buttons button{background:none;border:0;color:#fff;font-size:21px}
+.control-buttons .main-play{background:#fff;color:#111;width:38px;height:38px;border-radius:50%;font-size:17px}
+.timeline{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;color:#aaa}
+.timeline input{flex:1;min-width:0;accent-color:#b69cff}
+.volume{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.volume input{width:100px;accent-color:#b69cff}
+audio{display:none}
+body{padding-bottom:100px}
+@media(max-width:700px){
+ header{height:auto;padding:15px 4%;flex-wrap:wrap}
+ .logo{font-size:22px}
+ .search{width:100%;order:2}
+ .layout{grid-template-columns:1fr}
+ aside{display:flex;gap:8px;padding:8px;overflow-x:auto}
+ .nav{white-space:nowrap;width:auto;margin:0}
+ main{padding:18px 4%}
+ .hero{padding:22px}
+ .songs{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .player{grid-template-columns:1fr auto;padding:10px;gap:8px}
+ .controls{grid-column:1/-1;grid-row:2}
+ .volume{display:none}
+ body{padding-bottom:145px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">♫ MusicBox</div>
+  <input class="search" id="search" placeholder="⌕  Tìm bài hát, nghệ sĩ..." aria-label="Tìm bài hát">
+</header>
+
+<div class="layout">
+<aside>
+  <button class="nav active" data-view="all">⌂ &nbsp; Khám phá</button>
+  <button class="nav" data-view="favorites">♥ &nbsp; Yêu thích</button>
+</aside>
+
+<main>
+  <section class="hero">
+    <h1>Âm nhạc của bạn 🎧</h1>
+    <p>Khám phá giai điệu mới, tận hưởng từng khoảnh khắc.</p>
+    <button class="primary" id="playAll">▶ &nbsp; Phát nhạc</button>
+  </section>
+
+  <div class="section-title">
+    <h2 id="heading">Bài hát nổi bật</h2>
+  </div>
+  <div id="songs" class="songs"></div>
+  <p id="empty" class="empty" hidden>Không tìm thấy bài hát nào.</p>
+</main>
+</div>
+
+<footer class="player">
+  <div class="track">
+    <img id="cover" src="https://placehold.co/100x100/503878/ffffff?text=Music" alt="Ảnh bìa">
+    <div class="track-text">
+      <strong id="nowTitle">Chưa phát nhạc</strong>
+      <span id="nowArtist">Chọn bài hát để bắt đầu</span>
+    </div>
+    <button class="heart" id="nowHeart" aria-label="Thêm vào yêu thích">♡</button>
+  </div>
+
+  <div class="controls">
+    <div class="control-buttons">
+      <button id="prev" aria-label="Bài trước">⏮</button>
+      <button class="main-play" id="toggle" aria-label="Phát">▶</button>
+      <button id="next" aria-label="Bài tiếp">⏭</button>
+    </div>
+    <div class="timeline">
+      <span id="elapsed">0:00</span>
+      <input type="range" id="seek" min="0" max="100" value="0" aria-label="Vị trí bài hát">
+      <span id="duration">0:00</span>
+    </div>
+  </div>
+
+  <div class="volume">
+    <span>🔊</span>
+    <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8" aria-label="Âm lượng">
+  </div>
+</footer>
+
+<audio id="audio" preload="metadata"></audio>
+
+<script>
+const tracks=[
+ {title:"Dreams",artist:"Nhạc mẫu 01",cover:"https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+ {title:"Chill Night",artist:"Nhạc mẫu 02",cover:"https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+ {title:"Ocean Vibes",artist:"Nhạc mẫu 03",cover:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
+ {title:"Good Mood",artist:"Nhạc mẫu 04",cover:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
+ {title:"Night Drive",artist:"Nhạc mẫu 05",cover:"https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
+ {title:"Relax Time",artist:"Nhạc mẫu 06",cover:"https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"}
+];
+
+const $=id=>document.getElementById(id);
+const audio=$("audio");
+let current=-1;
+let view="all";
+let favorites=JSON.parse(localStorage.getItem("musicbox-favorites")||"[]");
+
+function time(seconds){
+ if(!Number.isFinite(seconds))return "0:00";
+ return Math.floor(seconds/60)+":"+String(Math.floor(seconds%60)).padStart(2,"0");
+}
+
+function render(){
+ const q=$("search").value.trim().toLowerCase();
+ const list=tracks.map((s,i)=>({...s,i})).filter(s=>
+ (s.title+" "+s.artist).toLowerCase().includes(q)&&
+ (view==="all"||favorites.includes(s.i))
+ );
+ $("heading").textContent=view==="all"?"Bài hát nổi bật":"Bài hát yêu thích";
+ $("songs").innerHTML="";
+ $("empty").hidden=list.length>0;
+ list.forEach(s=>{
+  const card=document.createElement("article");
+  card.className="card";
+  const art=document.createElement("div");
+  art.className="art";
+  const img=document.createElement("img");
+  img.src=s.cover;img.alt="Bìa "+s.title;img.loading="lazy";
+  const play=document.createElement("button");
+  play.className="round-play";play.textContent="▶";
+  play.setAttribute("aria-label","Phát "+s.title);
+  play.onclick=()=>playSong(s.i);
+  art.append(img,play);
+  const title=document.createElement("h3");title.textContent=s.title;
+  const artist=document.createElement("p");artist.textContent=s.artist;
+  const bottom=document.createElement("div");bottom.className="card-bottom";
+  const label=document.createElement("span");label.textContent="♫ Nghe ngay";label.style.color="#aaa";label.style.fontSize="12px";
+  const heart=document.createElement("button");
+  heart.className="heart"+(favorites.includes(s.i)?" on":"");
+  heart.textContent=favorites.includes(s.i)?"♥":"♡";
+  heart.setAttribute("aria-label","Yêu thích "+s.title);
+  heart.onclick=()=>favorite(s.i);
+  bottom.append(label,heart);
+  card.append(art,title,artist,bottom);
+  $("songs").append(card);
+ });
+}
+
+function playSong(i){
+ current=(i+tracks.length)%tracks.length;
+ const s=tracks[current];
+ audio.src=s.url;
+ $("cover").src=s.cover;
+ $("nowTitle").textContent=s.title;
+ $("nowArtist").textContent=s.artist;
+ $("nowHeart").textContent=favorites.includes(current)?"♥":"♡";
+ $("nowHeart").classList.toggle("on",favorites.includes(current));
+ audio.play().then(()=>{$("toggle").textContent="Ⅱ"}).catch(()=>{
+  $("toggle").textContent="▶";
+  $("nowArtist").textContent="Không phát được. Hãy thử lại.";
+ });
+}
+
+function toggle(){
+ if(current<0){playSong(0);return}
+ if(audio.paused){
+  audio.play().then(()=>{$("toggle").textContent="Ⅱ"}).catch(()=>{});
+ }else{
+  audio.pause();$("toggle").textContent="▶";
+ }
+}
+
+function next(){playSong(current<0?0:current+1)}
+function prev(){
+ if(current>=0&&audio.currentTime>3){audio.currentTime=0;return}
+ playSong(current<=0?tracks.length-1:current-1);
+}
+
+function favorite(i=current){
+ if(i<0)return;
+ if(favorites.includes(i))favorites=favorites.filter(x=>x!==i);
+ else favorites.push(i);
+ localStorage.setItem("musicbox-favorites",JSON.stringify(favorites));
+ render();
+ if(i===current){
+  $("nowHeart").textContent=favorites.includes(i)?"♥":"♡";
+  $("nowHeart").classList.toggle("on",favorites.includes(i));
+ }
+}
+
+$("search").addEventListener("input",render);
+$("prev").onclick=prev;
+$("next").onclick=next;
+$("toggle").onclick=toggle;
+$("playAll").onclick=()=>playSong(0);
+$("nowHeart").onclick=()=>favorite();
+$("favOnly").onclick=()=>{view=view==="all"?"favorites":"all";render()};
+document.querySelectorAll(".nav").forEach(btn=>btn.onclick=()=>{
+ view=btn.dataset.view;
+ document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b===btn));
+ render();
+});
+audio.addEventListener("timeupdate",()=>{
+ $("elapsed").textContent=time(audio.currentTime);
+ $("duration").textContent=time(audio.duration);
+ if(Number.isFinite(audio.duration)&&audio.duration>0)
+  $("seek").value=audio.currentTime/audio.duration*100;
+});
+$("seek").oninput=()=>{
+ if(Number.isFinite(audio.duration)&&audio.duration>0)
+  audio.currentTime=Number($("seek").value)/100*audio.duration;
+};
+$("volume").oninput=()=>audio.volume=Number($("volume").value);
+audio.volume=.8;
+audio.addEventListener("ended",next);
+render();
+</script>
+</body>
+</html>
+
