@@ -105,6 +105,21 @@ input[type=range]{cursor:pointer}
 @keyframes playerShimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
+
+/* Danh sach chi hien ten bai hat, khong tai anh bia */
+.songs{display:flex;flex-direction:column;gap:5px}
+.song-row{display:flex;align-items:center;gap:16px;padding:13px 16px;background:#141414;border:1px solid transparent;border-radius:8px;min-height:68px}
+.song-row:hover{background:#242424;border-color:#303030;transform:none}
+.song-row .art{display:none}
+.song-number{width:28px;flex:0 0 28px;text-align:center;color:#999;font-size:13px;font-variant-numeric:tabular-nums}
+.song-info{min-width:0;flex:1}
+.song-row h3{margin:0 0 5px;white-space:normal;line-height:1.35;font-size:15px}
+.song-row p{margin:0;color:#999;font-size:12px}
+.row-play{width:38px;height:38px;flex:0 0 38px;border:0;border-radius:50%;background:var(--green);color:#000;font-weight:bold}
+.row-play:hover{transform:scale(1.06);box-shadow:0 0 16px #1ed76055}
+.song-row .heart{flex:0 0 30px}
+@media(max-width:600px){.song-row{gap:10px;padding:12px 9px}.song-number{width:22px;flex-basis:22px}.song-row h3{font-size:14px}.row-play{width:34px;height:34px;flex-basis:34px}}
+
 </style>
 </head>
 <body>
@@ -172,29 +187,29 @@ input[type=range]{cursor:pointer}
 
 <script>
 const tracks=[
- {title:"Mashup 50in1 Nhạc Siêu Peak",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
- {title:"Mashup 30in1 Nhạc Lộn Xộn",artist:"Mashup YouTube",start:774,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=774s"},
- {title:"Mashup 20in1 Nhạc Thập Cẩm",artist:"Mashup YouTube",start:1276,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1276s"},
- {title:"Mashup 5in1 Nhạc Lộn Xộn",artist:"Mashup YouTube",start:1614,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1614s"},
- {title:"Mashup 3in1 Trả Cho Anh x Chấp Niệm Trong Em x Anh Vội Quên",artist:"Mashup YouTube",start:1883,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1883s"},
- {title:"Mashup 4in1 Lo Người Ướt Áo x Đừng Nói x Yêu Bằng Mắt",artist:"Mashup YouTube",start:2190,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2190s"},
- {title:"Mashup 3in1 Thương Nhau Đến Thế x Chấp Niệm Trong Em x Anh Vội Quên",artist:"Mashup YouTube",start:2455,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2455s"},
- {title:"Mashup 10in1 Nhạc Thập Cẩm",artist:"Mashup YouTube",start:2707,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2707s"},
- {title:"Mashup 10in1 Nhạc Full Topping",artist:"Mashup YouTube",start:2954,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2954s"},
- {title:"Ngày Mình Chia Tay",artist:"Mashup YouTube",start:3175,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3175s"},
- {title:"Thành Đô",artist:"Mashup YouTube",start:3432,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3432s"},
- {title:"Hẹn Hò Nhưng Không Yêu",artist:"Mashup YouTube",start:3687,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3687s"},
- {title:"Mashup 2in1 Anh Vội Quên x Trả Cho Anh",artist:"Mashup YouTube",start:3917,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3917s"},
- {title:"Mashup 2in1 Yêu Bằng Mắt x Lo Người Ướt Áo",artist:"Mashup YouTube",start:4165,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4165s"},
- {title:"Mashup 2in1 Thương Thầm x Mưa Rơi Vào Phòng",artist:"Mashup YouTube",start:4432,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4432s"},
- {title:"Mashup 2in1 Lo Người Ướt Áo x Đoạn Tuyệt Nàng Đi",artist:"Mashup YouTube",start:4668,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4668s"},
- {title:"Mashup 2in1 Đổi Tình Đổi Áo x Lý Do Là Gì",artist:"Mashup YouTube",start:4873,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4873s"},
- {title:"Mashup Mở Lòng Vì Ai x Em Thua Cô Ta x Chắc Gì Anh Yêu Cô Ấy",artist:"Mashup YouTube",start:5208,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=5208s"},
- {title:"Mashup 3in1 Mở Lòng Vì Ai x Ôm Sầu",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
- {title:"Mashup 2in1 Thương Phận Hồng Nhan x Không Ai Nói Chia Tay",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
- {title:"Mashup 5in1 Chúc Phúc Cho Em",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
- {title:"Mashup 2in1 Trả Cho Anh x Vở Kịch Của Em",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
- {title:"Mashup 2in1 Lo Người Ướt Áo x Mở Lòng Vì Ai",artist:"Mashup YouTube",start:0,cover:"https://img.youtube.com/vi/0nzxMTQKb54/hqdefault.jpg",url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"}
+ {title:"Mashup 50in1 Nhạc Siêu Peak",artist:"Mashup YouTube",start:0,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 30in1 Nhạc Lộn Xộn",artist:"Mashup YouTube",start:774,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=774s"},
+ {title:"Mashup 20in1 Nhạc Thập Cẩm",artist:"Mashup YouTube",start:1276,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1276s"},
+ {title:"Mashup 5in1 Nhạc Lộn Xộn",artist:"Mashup YouTube",start:1614,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1614s"},
+ {title:"Mashup 3in1 Trả Cho Anh x Chấp Niệm Trong Em x Anh Vội Quên",artist:"Mashup YouTube",start:1883,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=1883s"},
+ {title:"Mashup 4in1 Lo Người Ướt Áo x Đừng Nói x Yêu Bằng Mắt",artist:"Mashup YouTube",start:2190,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2190s"},
+ {title:"Mashup 3in1 Thương Nhau Đến Thế x Chấp Niệm Trong Em x Anh Vội Quên",artist:"Mashup YouTube",start:2455,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2455s"},
+ {title:"Mashup 10in1 Nhạc Thập Cẩm",artist:"Mashup YouTube",start:2707,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2707s"},
+ {title:"Mashup 10in1 Nhạc Full Topping",artist:"Mashup YouTube",start:2954,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=2954s"},
+ {title:"Ngày Mình Chia Tay",artist:"Mashup YouTube",start:3175,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3175s"},
+ {title:"Thành Đô",artist:"Mashup YouTube",start:3432,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3432s"},
+ {title:"Hẹn Hò Nhưng Không Yêu",artist:"Mashup YouTube",start:3687,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3687s"},
+ {title:"Mashup 2in1 Anh Vội Quên x Trả Cho Anh",artist:"Mashup YouTube",start:3917,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=3917s"},
+ {title:"Mashup 2in1 Yêu Bằng Mắt x Lo Người Ướt Áo",artist:"Mashup YouTube",start:4165,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4165s"},
+ {title:"Mashup 2in1 Thương Thầm x Mưa Rơi Vào Phòng",artist:"Mashup YouTube",start:4432,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4432s"},
+ {title:"Mashup 2in1 Lo Người Ướt Áo x Đoạn Tuyệt Nàng Đi",artist:"Mashup YouTube",start:4668,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4668s"},
+ {title:"Mashup 2in1 Đổi Tình Đổi Áo x Lý Do Là Gì",artist:"Mashup YouTube",start:4873,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=4873s"},
+ {title:"Mashup Mở Lòng Vì Ai x Em Thua Cô Ta x Chắc Gì Anh Yêu Cô Ấy",artist:"Mashup YouTube",start:5208,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=5208s"},
+ {title:"Mashup 3in1 Mở Lòng Vì Ai x Ôm Sầu",artist:"Mashup YouTube",start:0,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 2in1 Thương Phận Hồng Nhan x Không Ai Nói Chia Tay",artist:"Mashup YouTube",start:0,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 5in1 Chúc Phúc Cho Em",artist:"Mashup YouTube",start:0,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 2in1 Trả Cho Anh x Vở Kịch Của Em",artist:"Mashup YouTube",start:0,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"},
+ {title:"Mashup 2in1 Lo Người Ướt Áo x Mở Lòng Vì Ai",artist:"Mashup YouTube",start:0,url:"https://www.youtube.com/watch?v=0nzxMTQKb54&t=0s"}
 ];
 
 const $=id=>document.getElementById(id);
@@ -211,35 +226,36 @@ function time(seconds){
 function render(){
  const q=$("search").value.trim().toLowerCase();
  const list=tracks.map((s,i)=>({...s,i})).filter(s=>
- (s.title+" "+s.artist).toLowerCase().includes(q)&&
- (view==="all"||favorites.includes(s.i))
+  (s.title+" "+s.artist).toLowerCase().includes(q)&&
+  (view==="all"||favorites.includes(s.i))
  );
- $("heading").textContent=view==="all"?"Bài hát nổi bật":"Bài hát yêu thích";
+ $("heading").textContent=view==="all"?"Danh sách bài hát":"Bài hát yêu thích";
  $("songs").innerHTML="";
  $("empty").hidden=list.length>0;
  list.forEach(s=>{
   const card=document.createElement("article");
-  card.className="card";
-  const art=document.createElement("div");
-  art.className="art";
-  const img=document.createElement("img");
-  img.src=s.cover;img.alt="Bìa "+s.title;img.loading="lazy";
+  card.className="card song-row";
+  const number=document.createElement("span");
+  number.className="song-number";
+  number.textContent=String(s.i+1).padStart(2,"0");
+  const titleBox=document.createElement("div");
+  titleBox.className="song-info";
+  const title=document.createElement("h3");
+  title.textContent=s.title;
+  const artist=document.createElement("p");
+  artist.textContent="YouTube · Mashup";
+  titleBox.append(title,artist);
   const play=document.createElement("button");
-  play.className="round-play";play.textContent="▶";
+  play.className="row-play";
+  play.textContent="▶";
   play.setAttribute("aria-label","Phát "+s.title);
   play.onclick=()=>playSong(s.i);
-  art.append(img,play);
-  const title=document.createElement("h3");title.textContent=s.title;
-  const artist=document.createElement("p");artist.textContent=s.artist;
-  const bottom=document.createElement("div");bottom.className="card-bottom";
-  const label=document.createElement("span");label.textContent="♫ Nghe ngay";label.style.color="#aaa";label.style.fontSize="12px";
   const heart=document.createElement("button");
   heart.className="heart"+(favorites.includes(s.i)?" on":"");
   heart.textContent=favorites.includes(s.i)?"♥":"♡";
   heart.setAttribute("aria-label","Yêu thích "+s.title);
   heart.onclick=()=>favorite(s.i);
-  bottom.append(label,heart);
-  card.append(art,title,artist,bottom);
+  card.append(number,titleBox,play,heart);
   $("songs").append(card);
  });
 }
@@ -250,7 +266,6 @@ function playSong(i){
  $("ytSection").hidden=false;
  $("ytTitle").textContent=s.title;
  $("ytFrame").src="https://www.youtube.com/embed/0nzxMTQKb54?start="+s.start+"&autoplay=1&rel=0";
- $("cover").src=s.cover;
  $("nowTitle").textContent=s.title;
  $("nowArtist").textContent="Đang phát từ YouTube";
  $("nowHeart").textContent=favorites.includes(current)?"♥":"♡";
